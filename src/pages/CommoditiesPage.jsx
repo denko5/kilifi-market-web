@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
 import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../contexts/ToastContext'
 import { getCommodities, deleteCommodity } from '../services/commodityService'
 import { getCategories } from '../services/commodityCategoryService'
 
@@ -12,6 +13,7 @@ function CommoditiesPage() {
   const [categoryFilter, setCategoryFilter] = useState('')
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
+  const { showToast } = useToast()
 
   const loadCommodities = async () => {
     setLoading(true)
@@ -33,8 +35,13 @@ function CommoditiesPage() {
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this commodity?')) return
-    await deleteCommodity(id)
-    loadCommodities()
+    try {
+      await deleteCommodity(id)
+      showToast('Commodity deleted successfully.')
+      loadCommodities()
+    } catch (err) {
+      showToast('Failed to delete commodity.', 'error')
+    }
   }
 
   return (
@@ -73,6 +80,8 @@ function CommoditiesPage() {
 
       {loading ? (
         <p className="text-gray-500">Loading...</p>
+      ) : commodities.length === 0 ? (
+        <p className="text-gray-500">No commodities found.</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {commodities.map((c) => (

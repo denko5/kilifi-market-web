@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import MainLayout from '../layouts/MainLayout'
 import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../contexts/ToastContext'
 import { getTodayPrices, deletePrice } from '../services/priceService'
 import { Link } from 'react-router-dom'
 
@@ -8,6 +9,7 @@ function HomePage() {
   const [prices, setPrices] = useState([])
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
+  const { showToast } = useToast()
 
   const loadPrices = async () => {
     setLoading(true)
@@ -22,8 +24,13 @@ function HomePage() {
 
   const handleDelete = async (id) => {
     if (!confirm('Delete this price entry?')) return
-    await deletePrice(id)
-    loadPrices()
+    try {
+      await deletePrice(id)
+      showToast('Price deleted successfully.')
+      loadPrices()
+    } catch (err) {
+      showToast('Failed to delete price.', 'error')
+    }
   }
 
   return (

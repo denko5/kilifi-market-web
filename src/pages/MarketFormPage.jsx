@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
+import { useToast } from '../contexts/ToastContext'
 import { getMarket, createMarket, updateMarket } from '../services/marketService'
 
 function MarketFormPage() {
   const { id } = useParams()
   const isEditing = Boolean(id)
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
@@ -45,12 +47,15 @@ function MarketFormPage() {
       }
       if (isEditing) {
         await updateMarket(id, payload)
+        showToast('Market updated successfully.')
       } else {
         await createMarket(payload)
+        showToast('Market created successfully.')
       }
       navigate('/markets')
     } catch (err) {
       setErrors(err.response?.data?.errors || {})
+      showToast('Please fix the errors and try again.', 'error')
     } finally {
       setSubmitting(false)
     }

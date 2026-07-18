@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import MainLayout from '../layouts/MainLayout'
 import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../contexts/ToastContext'
 import { getMarkets, deleteMarket } from '../services/marketService'
 import { Link } from 'react-router-dom'
 import WeatherWidget from '../components/WeatherWidget'
@@ -10,6 +11,7 @@ function MarketsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const { user } = useAuth()
+  const { showToast } = useToast()
 
   const loadMarkets = async () => {
     setLoading(true)
@@ -31,9 +33,10 @@ function MarketsPage() {
     if (!confirm('Delete this market?')) return
     try {
       await deleteMarket(id)
+      showToast('Market deleted successfully.')
       loadMarkets()
     } catch (err) {
-      setError('Failed to delete market.')
+      showToast('Failed to delete market.', 'error')
     }
   }
 

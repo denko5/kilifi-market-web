@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
+import { useToast } from '../contexts/ToastContext'
 import { getCommodity, createCommodity, updateCommodity } from '../services/commodityService'
 import { getCategories } from '../services/commodityCategoryService'
 
@@ -8,6 +9,7 @@ function CommodityFormPage() {
   const { id } = useParams()
   const isEditing = Boolean(id)
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [categories, setCategories] = useState([])
   const [categoryId, setCategoryId] = useState('')
@@ -50,12 +52,15 @@ function CommodityFormPage() {
     try {
       if (isEditing) {
         await updateCommodity(id, formData)
+        showToast('Commodity updated successfully.')
       } else {
         await createCommodity(formData)
+        showToast('Commodity created successfully.')
       }
       navigate('/commodities')
     } catch (err) {
       setErrors(err.response?.data?.errors || {})
+      showToast('Please fix the errors and try again.', 'error')
     } finally {
       setSubmitting(false)
     }

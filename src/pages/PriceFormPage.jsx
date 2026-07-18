@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
+import { useToast } from '../contexts/ToastContext'
 import { getPrice, createPrice, updatePrice } from '../services/priceService'
 import { getMarkets } from '../services/marketService'
 import { getCommodities } from '../services/commodityService'
@@ -9,6 +10,7 @@ function PriceFormPage() {
   const { id } = useParams()
   const isEditing = Boolean(id)
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [markets, setMarkets] = useState([])
   const [commodities, setCommodities] = useState([])
@@ -47,6 +49,7 @@ function PriceFormPage() {
     try {
       if (isEditing) {
         await updatePrice(id, { price, price_date: priceDate, remarks })
+        showToast('Price updated successfully.')
       } else {
         await createPrice({
           market_id: marketId,
@@ -56,10 +59,12 @@ function PriceFormPage() {
           price_date: priceDate,
           remarks,
         })
+        showToast('Price created successfully.')
       }
       navigate('/')
     } catch (err) {
       setErrors(err.response?.data?.errors || {})
+      showToast('Please fix the errors and try again.', 'error')
     } finally {
       setSubmitting(false)
     }
