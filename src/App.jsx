@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import CommoditiesPage from './pages/CommoditiesPage'
 import CommodityFormPage from './pages/CommodityFormPage'
 import PriceFormPage from './pages/PriceFormPage'
+import ComparePricesPage from './pages/ComparePricesPage'
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         />
         <Route path="/prices/new" element={<ProtectedRoute><PriceFormPage /></ProtectedRoute>} />
         <Route path="/prices/:id/edit" element={<ProtectedRoute><PriceFormPage /></ProtectedRoute>} />
+        <Route path="/compare" element={<ComparePricesPage />} />
       </Routes>
     </AuthProvider>
   )

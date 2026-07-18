@@ -11,6 +11,8 @@ function MarketFormPage() {
   const [name, setName] = useState('')
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
+  const [latitude, setLatitude] = useState('')
+  const [longitude, setLongitude] = useState('')
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [loading, setLoading] = useState(isEditing)
@@ -21,6 +23,8 @@ function MarketFormPage() {
         setName(market.name)
         setLocation(market.location)
         setDescription(market.description || '')
+        setLatitude(market.latitude || '')
+        setLongitude(market.longitude || '')
         setLoading(false)
       })
     }
@@ -32,7 +36,13 @@ function MarketFormPage() {
     setSubmitting(true)
 
     try {
-      const payload = { name, location, description }
+      const payload = {
+        name,
+        location,
+        description,
+        latitude: latitude || null,
+        longitude: longitude || null,
+      }
       if (isEditing) {
         await updateMarket(id, payload)
       } else {
@@ -83,6 +93,30 @@ function MarketFormPage() {
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {errors.location && <p className="text-red-600 text-xs mt-1">{errors.location[0]}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Latitude (optional)</label>
+          <input
+            type="number"
+            step="any"
+            value={latitude}
+            onChange={(e) => setLatitude(e.target.value)}
+            placeholder="-3.6305"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Longitude (optional)</label>
+          <input
+            type="number"
+            step="any"
+            value={longitude}
+            onChange={(e) => setLongitude(e.target.value)}
+            placeholder="39.8499"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
         </div>
 
         <div>

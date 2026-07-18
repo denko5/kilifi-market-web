@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { getMarkets, deleteMarket } from '../services/marketService'
 import { Link } from 'react-router-dom'
+import WeatherWidget from '../components/WeatherWidget'
 
 function MarketsPage() {
   const [markets, setMarkets] = useState([])
@@ -70,6 +71,10 @@ function MarketsPage() {
               >
                 {market.is_active ? 'Active' : 'Inactive'}
               </span>
+
+              <div className="mt-3">
+                <WeatherWidget marketId={market.id} />
+              </div>
 
               {user && (
                 <div className="flex gap-3 mt-4 text-sm">

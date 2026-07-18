@@ -20,6 +20,7 @@ function Navbar() {
         <Link to="/" className="hover:text-green-200">Prices</Link>
         <Link to="/markets" className="hover:text-green-200">Markets</Link>
         <Link to="/commodities" className="hover:text-green-200">Commodities</Link>
+        <Link to="/compare" className="hover:text-green-200">Compare</Link>
 
         {user ? (
           <>
