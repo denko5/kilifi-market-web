@@ -87,7 +87,11 @@ function CommoditiesPage() {
           {commodities.map((c) => (
             <div key={c.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               {c.image_url && (
-                <img src={`http://127.0.0.1:8000${c.image_url}`} alt={c.name} className="w-full h-32 object-cover" />
+                <img
+                  src={`${import.meta.env.VITE_API_ORIGIN}${c.image_url}`}
+                  alt={c.name}
+                  className="w-full h-32 object-cover"
+                />
               )}
               <div className="p-4">
                 <h2 className="font-semibold text-gray-800">{c.name}</h2>
